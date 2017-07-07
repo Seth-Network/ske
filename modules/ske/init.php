@@ -32,34 +32,6 @@ Route::set('ske_assets', 'assets/<file>',array(
 		));
 
 
-Route::set('ske_admin_di', 'admin/di/<action>',array(
-				'action' 		=> '(singletons|managed)'))
-				->defaults(array(
-						'controller' 	=> 'DI',
-						'directory'		=> 'admin'
-				));
-
-Route::set('ske_admin_annotations', 'admin/annotations/<action>',array(
-		'action' 		=> '(list)'))
-		->defaults(array(
-				'controller' 	=> 'Annotations',
-				'directory'		=> 'admin'
-		));
-
-Route::set('ske_admin_l18n', 'admin/l18n/<action>',array(
-		'action' 		=> '(list)'))
-		->defaults(array(
-				'controller' 	=> 'Localization',
-				'directory'		=> 'admin'
-		));
-Route::set('ske_admin_l18n_api', 'admin/api/l18n/(<lang>/)<action>',array(
-		'lang'			=> '([a-z][a-z]\-[a-z][a-z])',
-		'action' 		=> '(update|missing)'))
-		->defaults(array(
-				'controller' 	=> 'Localization',
-				'directory'		=> 'admin/api'
-		));
-
 /**
  ###########################################################################################
  H E L P E R
