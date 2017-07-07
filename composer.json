@@ -1,0 +1,13 @@
+{
+  "name": "seth-network/ske",
+  "description": "Seth's Kohana Extensions for Kohana 3.3+ and Koseven",
+  "keywords": [
+    "kohana",
+    "kohana-php7",
+    "koseven"
+  ],
+  "homepage": "https://seth-network.de/",
+  "require": {
+	"koseven/koseven": "3.3.*"
+  }
+}
