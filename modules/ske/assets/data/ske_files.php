@@ -16,8 +16,5 @@ return array(
 	'config/modules.php'						=> APPPATH .'config/modules.php',
 	'assets/patch/bootstrap.php'				=> APPPATH .'bootstrap.php',
     'assets/patch/minion'				        => DOCROOT .'minion',
-    'assets/patch/miniond'				        => DOCROOT .'miniond',
-    'public/index.php'				            => DOCROOT .'public/index.php',
-    'public/install.php'				        => DOCROOT .'public/install.php',
-    'public/example.htaccess'				    => DOCROOT .'public/example.htaccess',
+    'assets/patch/index.php'				    => DOCROOT .'public/index.php',
 );
