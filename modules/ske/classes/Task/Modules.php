@@ -112,17 +112,21 @@ class Task_Modules extends Minion_Task {
                 echo $t . "./minion modules --enable " . $module . $n;
                 return false;
             }
-            $available->set($module, $path);
+            $available->set($module, $this->modpath($path, false));
             echo "Module added successfully: " . $module . " -> " . $this->modpath($path) . $n . $n;
             echo "The module is not yet enabled and will not be loaded. Use following command to enable module:" . $n . $n;
             echo $t . "./minion modules --enable " . $module . $n;
         }
     }
 
-    protected function modpath($path) {
+    protected function modpath($path, $substitute_constant=true) {
         $modpath = str_replace('\\', '/', MODPATH);
         $path = str_replace('\\', '/', $path);
-        return str_replace($modpath, 'MODPATH/', $path);
+        if ( $substitute_constant ) {
+            return str_replace($modpath, 'MODPATH/', $path);
+        } else {
+            return $path;
+        }
     }
 
     protected function remove_missing_modules() {
@@ -173,7 +177,7 @@ class Task_Modules extends Minion_Task {
             $this->error("Module's path is not a directory or does not exists, module can not be loaded:" . $n . $n . $t . $this->modpath($path));
         } else {
             $available->set($module, null);
-            $active->set($module, $path);
+            $active->set($module, $this->modpath($path, false));
 
             echo "Module '" . $module . " -> " . $this->modpath($path) . "' is now active." . $n . $n;
         }
@@ -194,7 +198,7 @@ class Task_Modules extends Minion_Task {
             echo "Module '" . $module . " -> " . $this->modpath($path) . "' is now disabled." . $n . $n;
         }
         if (!isset($available->as_array()[$module])) {
-            $available->set($module, $path);
+            $available->set($module, $this->modpath($path, false));
         } else {
             echo "Module '" . $module . "' is already disabled." . $n . $n;
         }
