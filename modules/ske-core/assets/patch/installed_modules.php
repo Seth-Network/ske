@@ -16,6 +16,10 @@ return array(
     'userguide'     => MODPATH . 'vendor/koseven/koseven/modules/userguide',  // User guide and API documentation
 
     /**
-     *  Required SKE modules
+     *  SKE modules
      */
+    'assets'		=> MODPATH.'vendor/seth-network/ske/modules/ske-assets',
+    'identity'		=> MODPATH.'vendor/seth-network/ske/modules/ske-identity',
+    'events'		=> MODPATH.'vendor/seth-network/ske/modules/ske-events',
+    'cdi'			=> MODPATH.'vendor/seth-network/ske/modules/ske-cdi',
 );

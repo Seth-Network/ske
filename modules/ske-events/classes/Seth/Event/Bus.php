@@ -1,6 +1,9 @@
 <?php
 
 class Seth_Event_Bus {
+    const CACHE_LIFETIME = 3600;
+    const CACHE_EVENTS = "ske.events";
+    const CACHE_EVENT_LISTENERS = "ske.listeners";
 	
 	protected $listeners = array();
 	
@@ -147,7 +150,7 @@ class Seth_Event_Bus {
 		if (Kohana::$profiling === TRUE) {
 			// add listener to statistics (for administrativ purpose)
 			if ( self::$event_cache === null ) {
-				self::$event_cache = Cache::instance()->get(SKE::CACHE_EVENTS, array());
+				self::$event_cache = Cache::instance()->get(self::CACHE_EVENTS, array());
 			}
 			$count = 0;
 			if ( isset(self::$event_cache[$event_class]) ) {
@@ -163,7 +166,7 @@ class Seth_Event_Bus {
 			$postedBy[( isset($stack[1]['class']) ? $stack[1]['class']:"direct")] = ( isset($stack[1]['file']) ) ? $stack[1]['file']:"n/a";
 			
 			self::$event_cache[$event_class] = array(count($listeners), $postedBy, $obj_o->getFileName());
-			Cache::instance()->set(SKE::CACHE_EVENTS, self::$event_cache, SKE::CACHE_LIFETIME);
+			Cache::instance()->set(self::CACHE_EVENTS, self::$event_cache, self::CACHE_LIFETIME);
 			
 			$benchmark_events = Profiler::start('SKE/Events', get_class($event));
 		}
@@ -214,11 +217,11 @@ class Seth_Event_Bus {
 		// add listener to statistics (for administrativ purpose)
 		if (Kohana::$profiling === TRUE) {
 			if ( self::$listener_cache === null ) {
-				self::$listener_cache = Cache::instance()->get(SKE::CACHE_EVENT_LISTENERS, array());
+				self::$listener_cache = Cache::instance()->get(self::CACHE_EVENT_LISTENERS, array());
 			}
 			$c = new ReflectionClass($listener);
 			self::$listener_cache[get_class($listener)] = array($event_class, $method, $priority, $c->getFileName());
-			Cache::instance()->set(SKE::CACHE_EVENT_LISTENERS, self::$listener_cache, SKE::CACHE_LIFETIME);
+			Cache::instance()->set(self::CACHE_EVENT_LISTENERS, self::$listener_cache, self::CACHE_LIFETIME);
 		}
 	}
 	

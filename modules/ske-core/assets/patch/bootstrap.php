@@ -17,7 +17,7 @@
 
 // Load the core Kohana class
 require SYSPATH.'classes/Kohana/Core'.EXT;
-require MODPATH.'vendor/seth-network/ske/modules/ske/classes/Seth/Core'.EXT;
+require MODPATH.'vendor/seth-network/ske/modules/ske-core/classes/Seth/Core'.EXT;
 
 if (is_file(APPPATH.'classes/Kohana'.EXT))
 {
