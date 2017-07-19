@@ -246,8 +246,14 @@ class Task_Modules extends Minion_Task {
                 }
             }
         }
+        $sample_enable = ( empty($available_modules) ) ? 'MODULE':current(array_keys($available_modules));
+        $sample_disable = ( empty($active_modules) ) ? 'MODULE':current(array_keys($active_modules));
+
+        echo $n .'Use following command to enable or disable a module:'. $n . $n;
+        echo $t . "./minion modules --enable ". $sample_enable . $n;
+        echo $t . "./minion modules --disable ". $sample_disable . $n;
         if ( $print_asterisk ) {
-            echo $n;
+            echo $n . $n ;
             echo "* This module's path does not exists" . $n;
         }
     }
