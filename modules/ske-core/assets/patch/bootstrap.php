@@ -123,7 +123,9 @@ Kohana::init($env_config);
 /**
  * Attach the file write to logging. Multiple writers are supported.
  */
-Kohana::$log->attach(new Log_File($env_config['log_dir']));
+Kohana::$log->attach(new Log_File($env_config['log_dir']), Log::EMERGENCY, $env_config['log_level'] + 1);
+
+Log::$write_on_add = $env_config['log_write_immediately'];
 
 /**
  * Attach a file reader to config. Multiple readers are supported.
@@ -145,7 +147,7 @@ Kohana::modules($module_config);
  * @see  http://kohanaframework.org/3.3/guide/kohana/cookies
  * 
  * If you have not defined a cookie salt in your Cookie class then
- * uncomment the line below and define a preferrably long salt.
+ * uncomment the line below and define a preferable long salt.
  */
 Cookie::$salt = $env_config['cache_salt'];
 

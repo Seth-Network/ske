@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') or die('No direct script access.');
 
 /**
  * This is an read-only interface for an user identity. This interface just provides a minimal set
@@ -14,14 +14,13 @@ interface Identity_User extends Identity {
 	const GUEST = -1;		// Virtual ID
 	const ROOT = -2;
 	const SYSTEM = -99;
-	
 
 	/**
 	 * Returns an array of groups this user belongs to
 	 * 
 	 * @return Array(Identity_Group)
 	 */
-
 	public function groups();
-	
+
+
 }

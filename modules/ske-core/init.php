@@ -19,17 +19,6 @@
  ###########################################################################################
 */
 
-/**
- * Route to dynamically load assets. If configured, the Asset controller tries to place a
- * duplicate to DOC_ROOT/assets/* to bypass the SKE Asset loading facility and provide a
- * "cached" version of the asset via normal web server loading method.
- */
-Route::set('ske_assets', 'assets/<file>',array(
-			'file' 			=> '.*'))
-		->defaults(array(
-			'controller' 	=> 'assets',
-			'action' 		=> 'show'
-		));
 
 
 /**

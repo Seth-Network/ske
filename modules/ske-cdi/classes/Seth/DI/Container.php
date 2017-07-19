@@ -14,18 +14,20 @@ class Seth_DI_Container extends Seth_DI_Dice implements DI_Container {
 	 * 
 	 * @param Annotation_Factory $factory
 	 */
-	public function __construct(Annotation_Factory $factory) {
+	public function __construct(Annotation_Factory $factory = null) {
 		$this->factory = $factory;
 		
 		// register own class' and annotation factorys annotations
 		$this->register(__CLASS__);
-		$this->register(get_class($factory));
+		if ( $factory !== null ) {
+            $this->register(get_class($factory));
+        }
 		
 		// add own instance for singleton's instance
 		$this->instances[__CLASS__] = $this;
 		
 		// add annotation factory's instance if it is a singleton
-		if ( $factory->has_annotation($factory, Singleton::class) ) {
+		if ( $factory !== null && $factory->has_annotation($factory, Singleton::class) ) {
 			$this->instances[get_class($factory)] = $factory;
 		}
 	}
@@ -101,36 +103,40 @@ class Seth_DI_Container extends Seth_DI_Dice implements DI_Container {
 		$ref = new ReflectionClass($clazz);
 		
 		$interceptors = null;
-		$annotations = $this->factory->get_annotations($ref);
-		foreach ( $annotations as $name => $annotation ) {
-			$annotation = ( is_array($annotation) ) ? current($annotation):$annotation;
-			
-			if ( $annotation instanceof Interceptable ) {
-				if ( $interceptors === null ) {
-					$interceptors = array();
-				}
-				if ( isset($this->interceptors[$name])) {
-					$interceptors = array_merge($interceptors, $this->interceptors[$name]);
-				}
-			}
-		}
+		if ( $this->factory !== null ) {
+            $annotations = $this->factory->get_annotations($ref);
+            foreach ($annotations as $name => $annotation) {
+                $annotation = (is_array($annotation)) ? current($annotation) : $annotation;
+
+                if ($annotation instanceof Interceptable) {
+                    if ($interceptors === null) {
+                        $interceptors = array();
+                    }
+                    if (isset($this->interceptors[$name])) {
+                        $interceptors = array_merge($interceptors, $this->interceptors[$name]);
+                    }
+                }
+            }
+        }
 		return $interceptors;
 	}
 	
 	protected function get_factories($clazz, array $interceptors) {
 		
 		$factories = array();
-			foreach ( $interceptors as $name ) {
-				$interceptor = $this->create($name);
-				
-				$ref = new ReflectionClass($interceptor);
-				foreach ( $ref->getMethods(ReflectionMethod::IS_PUBLIC) as $method ) {
-					if ( $this->factory->has_annotation($method, Factory::class)) {
-						$factories[] = array($interceptor, $method->getName());
-						break;
-					}
-				}
-			}
+        if ( $interceptors !== null && $this->factory !== null ) {
+            foreach ($interceptors as $name) {
+                $interceptor = $this->create($name);
+
+                $ref = new ReflectionClass($interceptor);
+                foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+                    if ($this->factory->has_annotation($method, Factory::class)) {
+                        $factories[] = array($interceptor, $method->getName());
+                        break;
+                    }
+                }
+            }
+        }
 		return $factories;
 	}
 	
@@ -144,7 +150,7 @@ class Seth_DI_Container extends Seth_DI_Dice implements DI_Container {
 	 * @return void
 	 */
 	protected function injectFields($obj, $name, array $rule) {
-		if ($obj !== null) {
+		if ($obj !== null && $this->factory !== null ) {
 			
 			$clazz = new ReflectionClass(isset($rule['instanceOf']) ? $rule['instanceOf']:$name);
 			foreach ( $this->factory->get_fields($clazz, Inject::class) as $prop_name => $annotations ) {
@@ -168,15 +174,16 @@ class Seth_DI_Container extends Seth_DI_Dice implements DI_Container {
 	 */
 	public function register($clazz) {
 		$ref = new ReflectionClass($clazz);
-		
-		$annotations = $this->factory->get_annotations($ref);
-		
-		
-		if ( $this->factory->has_annotation($ref, Singleton::class)) {
-			$this->addRule($ref->getName(), array(
-					'shared' => true 
-			));
-		}
+
+        $annotations = array();
+		if ( $this->factory !== null ) {
+            $annotations = $this->factory->get_annotations($ref);
+            if ($this->factory->has_annotation($ref, Singleton::class)) {
+                $this->addRule($ref->getName(), array(
+                    'shared' => true
+                ));
+            }
+        }
 		
 		$existingRule = $this->getRule('*');
 		foreach ($ref->getInterfaceNames() as $interface) {

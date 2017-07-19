@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') or die('No direct script access.');
 
 class Seth_Identity_Group extends Seth_Identity implements Identity_Group {
 	protected $users = array();
@@ -18,7 +18,6 @@ class Seth_Identity_Group extends Seth_Identity implements Identity_Group {
 	 * @return Array(Identity_Group)
 	 */
 	public function groups() {
-		# TODO
 		return array();
 	}
 	
@@ -28,16 +27,7 @@ class Seth_Identity_Group extends Seth_Identity implements Identity_Group {
 	 * @return Identity_Group
 	 */
 	public function parent() {
-		# TODO
-		return null;
+		return ( $this->id() != Identity_Group::ALL ) ? Identity_Provider::factory()->get_group(Identity_Group::ALL):null;
 	}
-	
-	/**
-	 * Returns a SKE link object used to create a link or request to the identity
-	 *
-	 * @return Link
-	 */
-	public function link() {
-	
-	}
+
 }

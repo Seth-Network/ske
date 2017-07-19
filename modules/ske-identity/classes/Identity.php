@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') or die('No direct script access.');
 
 /**
  * This is an read-only interface for an identity which can be used for
@@ -16,12 +16,12 @@ interface Identity {
 	 * @return int
 	 */
 	public function id();
-	
-	/**
-	 * Returns a SKE link object used to create a link or request to the identity
-	 * 
-	 * @return Link
-	 */
-	public function link();
+
+    /**
+     * Returns the identity's name
+     *
+     * @return String
+     */
+    public function name();
 
 }

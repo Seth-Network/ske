@@ -1,6 +1,7 @@
 <?php
 
 class Controller_Assets extends Controller {
+    const CONFIG = 'ske_assets';
 	
 	/**
 	 * Returns the URL to the requested asset either by adressing this controller or using
@@ -23,7 +24,7 @@ class Controller_Assets extends Controller {
 	 * @return String
 	 */
 	public static function get($resource, $dir="", $returnSite=true) {
-		$cache_dir = Kohana::$config->load("ske_assets")->get('cache_dir', null);
+		$cache_dir = Kohana::$config->load(self::CONFIG)->get('cache_dir', null);
 		
 		// add tailing slash to directory
 		if ( $dir != "" && substr($dir, -1) != '/' ) {
@@ -39,7 +40,7 @@ class Controller_Assets extends Controller {
 		$cachedFileURI = str_replace(DOCROOT, "", preg_replace('/\w+\/\.\.\//', '', $cachedFile));
 		
 		// If file should be loaded as VIEW, no caching should be done
-		if ( array_search($file, Kohana::$config->load("ske_assets")->get('load_as_view', array())) !== false ) {
+		if ( array_search($file, Kohana::$config->load(self::CONFIG)->get('load_as_view', array())) !== false ) {
 			// cache version exists: delete it
 			if ( $cache_dir !== null && file_exists($cachedFile) ) {
 				@unlink($cachedFile);
@@ -142,7 +143,7 @@ class Controller_Assets extends Controller {
 	 */
 	protected static function find_file($file) {
 		// use kohana filesystem to find file with the assets directories
-		$localFile = Kohana::find_file(Kohana::$config->load("ske_assets")->get('assets_dir', 'assets'), $file, false);
+		$localFile = Kohana::find_file(Kohana::$config->load(self::CONFIG)->get('assets_dir', 'assets'), $file, false);
 		
 		// File Exists?
 		if( file_exists($localFile) ){
@@ -168,7 +169,7 @@ class Controller_Assets extends Controller {
 			$ext = strtolower($path_parts["extension"]);
 			
 			// check if asset is of correct type
-			if ( array_search($ext, Kohana::$config->load("ske_assets")->get('suffixes', array())) === false ) {
+			if ( array_search($ext, Kohana::$config->load(self::CONFIG)->get('suffixes', array())) === false ) {
 				throw new  HTTP_Exception_404("Unable to find asset :file!", array(":file" => $file));
 			}
 		
@@ -181,7 +182,7 @@ class Controller_Assets extends Controller {
 			header("Content-Type: $ctype");
 			
 			// check if the asset should be loaded as VIEW to support query parameters
-			if ( array_search($file, Kohana::$config->load("ske_assets")->get('load_as_view', array())) !== false ) {
+			if ( array_search($file, Kohana::$config->load(self::CONFIG)->get('load_as_view', array())) !== false ) {
 				$view = new Seth_Asset_View($localFile);
 				$this->response->headers("Content-Type", $ctype);
 				$this->response->body($view->render());
@@ -191,7 +192,7 @@ class Controller_Assets extends Controller {
 				readfile($localFile);
 				
 				// copy the file to the asset cache directory
-				$cache_dir = Kohana::$config->load("ske_assets")->get('cache_dir', null);
+				$cache_dir = Kohana::$config->load(self::CONFIG)->get('cache_dir', null);
 				$cachedFile = $cache_dir ."/". $file;
 				
 				// check if cache directory is set, no cached version is available or cached version is outdated => copy new cached version

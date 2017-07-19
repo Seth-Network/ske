@@ -1,7 +1,7 @@
-<?php
+<?php defined('SYSPATH') or die('No direct script access.');
 
 
-abstract class Identity_Provider {
+abstract class Identity_Provider extends Auth {
 
 	
 	/**
@@ -12,6 +12,7 @@ abstract class Identity_Provider {
 	 * @param String $class
 	 * @param Array(String=>mixed) $config
 	 * @return Identity_Provider
+     * @throws Kohana_Exception
 	 */
 	public static function factory($class=NULL, array $config=array()) {
 		if ( $class === NULL ) {
@@ -19,14 +20,14 @@ abstract class Identity_Provider {
 		}
 		
 		if ( $class === NULL ) {
-			throw new Exception("Can not load default identity provider: No default configuration available!");
+			throw new Kohana_Exception("Can not load default identity provider: No default configuration available!");
 		}
 		
 		try {
 			$config = array_merge($config, Kohana::$config->load("ske_identity_management")->get($class, array()));
 			$provider = new $class($config);
 		} catch ( Exception $e ) {
-			throw new Exception("Exception while loading identity provider '$class': ". $e->__toString());
+			throw new Kohana_Exception("Exception while loading identity provider '$class': ". $e->__toString());
 		}
 		return $provider;
 	}
@@ -37,7 +38,6 @@ abstract class Identity_Provider {
 	 * @return String
 	 */
 	public static function get_tcpip() {
-		$ip = '0.0.0.0';
 		if (getenv("HTTP_CLIENT_IP")) {
 			$ip = getenv("HTTP_CLIENT_IP");
 		} elseif (getenv("HTTP_X_FORWARDED_FOR")) {
@@ -48,52 +48,9 @@ abstract class Identity_Provider {
 		return $ip;
 	}
 	
-	/**
-	 * Invokes a Request_Event for a user identity with given identifier. Returns the identity if one
-	 * was found or NULL, if no identity is available for the identifier
-	 * 
-	 * @param String $identifier
-	 * @return Identity_User
-	 */
-	public static function request_user($identifier) {
-		return Kohana::$event_bus->post(new Identity_Request_User_Event($identifier))->identity();
-	}
-	
-	/**
-	 * Invokes a Request_Event for a group identity with given identifier. Returns the identity if one
-	 * was found or NULL, if no identity is available for the identifier
-	 *
-	 * @param String $identifier
-	 * @return Identity_Group
-	 */
-	public static function request_group($identifier) {
-		return Kohana::$event_bus->post(new Identity_Request_Group_Event($identifier))->identity();
-	}
-	
 	public function __construct(array $config=array()) {
 	
 	}
-
-	/**
-	 * Logs in with credential $username and $password. Returns the Identity_User if login was
-	 * successfully or NULL (or an exception), if login failed. If $forceLogoff is set to TRUE
-	 * and identity with username $username is already logged in, a logoff is triggered and
-	 * then a relogin will be performed
-	 *
-	 * @param String $username
-	 * @param String $password
-	 * @param boolean $forceLogoff
-	 * @return Identity_User
-	 */
-	public abstract function login($username, $password, $forceLogoff=true);
-
-	/**
-	 * Logs off an identity and returns TRUE if logoff was successfully
-	 * and FALSE if an error occurs.
-	 *
-	 * @param Identity $identity
-	 */
-	public abstract function logoff(Identity $identity, $force=true);
 
 	/**
 	 * Returns the identity of the current active user. If the user is not logged in, a
@@ -125,7 +82,7 @@ abstract class Identity_Provider {
 	
 	/**
 	 * Returns TRUE if a current user is logged in. Using current_identity() to check if a user is
-	 * logged in or not may not be sufficent as the method may return a guest's identity.
+	 * logged in or not may not be sufficient as the method may return a guest's identity.
 	 * 
 	 * @return boolean
 	 */

@@ -3,8 +3,6 @@
 class Seth_Core extends Kohana_Core
 {
     const CFG_ROUTES_DISABLED = "routes";
-
-
     const CACHE_ROUTES = "ske.routes";
     const CACHE_KEYS = "ske.cache_keys";
     const CACHE_MISSING_LANG_MSG = "ske.l18n_missing";
@@ -47,7 +45,7 @@ class Seth_Core extends Kohana_Core
         if (class_exists('Event_Bus')) {
             self::$event_bus = new Event_Bus();
         } else {
-            Kohana::$log->add(Log::WARNING, 'Could not find class :clazz', array(':clazz' => 'Event_Bus'));
+            Kohana::$log->add(Log::INFO, 'Could not find class :clazz', array(':clazz' => 'Event_Bus'));
         }
 
         $af = null;
@@ -69,14 +67,14 @@ class Seth_Core extends Kohana_Core
                 $af->register_annotation(Returns::class);
             }
         } else {
-            Kohana::$log->add(Log::WARNING, 'Could not find class :clazz or :cache', array(':clazz' => 'Annotation_Factory', ':cache' => 'Annotation_Cache'));
+            Kohana::$log->add(Log::INFO, 'Could not find class :clazz or :cache', array(':clazz' => 'Annotation_Factory', ':cache' => 'Annotation_Cache'));
         }
 
         if (class_exists('DI_Container')) {
             // create DI container
             self::$di = new Seth_DI_Container($af);
         } else {
-            Kohana::$log->add(Log::WARNING, 'Could not find class :clazz', array(':clazz' => 'DI_Container'));
+            Kohana::$log->add(Log::INFO, 'Could not find class :clazz', array(':clazz' => 'DI_Container'));
         }
     }
 

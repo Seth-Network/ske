@@ -35,11 +35,11 @@ class Task_Kohana_Install extends Minion_Task {
             'Log directory is writable' => array(is_writable(APPPATH.'logs'), "Yes", "No"),
             'PCRE is compiled with UTF-8 support' => array(@preg_match('/^.$/u', 'ñ'), "Yes", "No"),
             'PCRE is compiled with unicode support' => array(@preg_match('/^\pL$/u', 'ñ'), "Yes", "No"),
-            'SPL support is loaded' => array(function_exists('spl_autoload_register'), "Loaded", "Disabled"),
-            'Reflection is loaded and available' => array(class_exists('ReflectionClass'), "Loaded", "Disabled"),
-            'Filter extension is loaded' => array(function_exists('filter_list'), "Loaded", "Disabled"),
-            'IconV extension is loaded' => array(extension_loaded('iconv'), "Loaded", "Disabled"),
-            'MbString does not overload native functions' => array(!extension_loaded('mbstring')|| (ini_get('mbstring.func_overload') & MB_OVERLOAD_STRING), ( extension_loaded('mbstring') ? "Yes":"Not loaded"), "No"),
+            'SPL support is loaded' => array(function_exists('spl_autoload_register'), "Yes", "Not available"),
+            'Reflection is loaded and available' => array(class_exists('ReflectionClass'), "Yes", "Not available"),
+            'Filter extension is loaded' => array(function_exists('filter_list'), "Yes", "Not loaded"),
+            'IconV extension is loaded' => array(extension_loaded('iconv'), "Yes", "Not loaded"),
+            'MbString does not overload native functions' => array(!extension_loaded('mbstring')|| (ini_get('mbstring.func_overload') & MB_OVERLOAD_STRING), ( extension_loaded('mbstring') ? "Yes":"Not loaded"), "mbstring does overloading"),
             'Library ctype is enabled' => function_exists('ctype_digit'),
 
         ));

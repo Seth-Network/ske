@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') or die('No direct script access.');
 
 /**
  * This is an read-only interface for a group. This interface just provides a minimal set
