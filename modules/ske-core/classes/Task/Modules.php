@@ -141,11 +141,12 @@ class Task_Modules extends Minion_Task {
         }
     }
 
-    protected function remove_module($module) {
+    public function remove_module($module) {
         $n = "\n";
         $t = "\t";
+        $active = Kohana::$config->load('modules');
 
-        if ($this->disable_module($module)) {
+        if ( !isset($active->as_array()[$module]) || $this->disable_module($module)) {
             $available = Kohana::$config->load('installed_modules');
 
             if (isset($available->as_array()[$module])) {
@@ -157,7 +158,7 @@ class Task_Modules extends Minion_Task {
         }
     }
 
-    protected function enable_module($module, $path = '') {
+    public function enable_module($module, $path = '') {
         $n = "\n";
         $t = "\t";
         $active = Kohana::$config->load('modules');
@@ -184,7 +185,7 @@ class Task_Modules extends Minion_Task {
 
     }
 
-    protected function disable_module($module, $path = '') {
+    public function disable_module($module, $path = '') {
         $n = "\n";
         $active = Kohana::$config->load('modules');
         $available = Kohana::$config->load('installed_modules');

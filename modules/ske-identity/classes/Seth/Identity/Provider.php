@@ -74,7 +74,7 @@ class Seth_Identity_Provider extends Identity_Provider
             throw new Kohana_Exception("Username or Password wrong!");
         }
     }
-    
+
     /**
      * Get the stored password for a username.
      *
