@@ -211,9 +211,13 @@ class Task_Ske_Packager extends Minion_Task
 
         if ( $delete && file_exists($location)) {
             // remove from disk
-            unlink($location);
             echo $n . "Deleting package's sources from path: ". $n .$n;
             echo $t . $this->path($location) . $n;
+            if ( Kohana::$is_windows ){
+                exec(sprintf("rd /s /q %s", escapeshellarg(realpath($location))));
+            } else{
+                exec(sprintf("rm -rf %s", escapeshellarg(realpath($location))));
+            }
         } else if ( file_exists($location)) {
             echo $n . "Package's sources are kept in path and are not deleted:". $n . $n;
             echo $t . $this->path($location) . $n;
@@ -361,8 +365,10 @@ class Task_Ske_Packager extends Minion_Task
         }
 
         echo $n;
-        echo "Use following command to list a package's modules:" . $n;
-        echo $n . $t . "./minion ske:packager --instpect PACKAGE" . $n;
+        echo "Use following command to list a package's modules, add or remove a package:" . $n . $n;
+        echo $t . "./minion ske:packager --inspect PACKAGE" . $n;
+        echo  $t . "./minion ske:packager --add=LOCATION --version=VERSION PACKAGE" . $n;
+        echo  $t . "./minion ske:packager --remove PACKAGE (--force) (--delete)" . $n;
     }
 
     protected function error($msg, $new_line = "\n")
