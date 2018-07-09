@@ -13,7 +13,7 @@ $application = 'application';
  *
  * @link http://kohanaframework.org/guide/about.install#modules
  */
-$modules = dirname(__FILE__). './../';
+$modules = dirname(__FILE__). '/../';
 
 /**
  * The directory in which the Kohana resources are located. The system
